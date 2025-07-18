@@ -10,14 +10,14 @@ public class PatternGenerator
         currLength = 3;
     }
 
-    public IList<Colors> GenerateNext()
+    public IList<GameEvent> GenerateNext()
     {
-        IList<Colors> pattern = new List<Colors>();
+        IList<GameEvent> pattern = new List<GameEvent>();
         Random random = new();
 
         for (int i = 0; i < currLength; i++)
         {
-            pattern.Add((Colors)random.Next(0, 4));
+            pattern.Add(new GameEvent((Colors)random.Next(0, 4), random.Next(0, 4)));
         }
 
         currLength++;
