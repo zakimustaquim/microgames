@@ -1,8 +1,13 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class QuadrantScript : MonoBehaviour
 {
+    public Color currColor;
+
+    public int quadrantIndex;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -12,7 +17,8 @@ public class QuadrantScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        // Update the current color
+        currColor = gameObject.GetComponent<Image>().color;
     }
 
     void SetOpacity(float opacity)

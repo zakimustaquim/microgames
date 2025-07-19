@@ -537,6 +537,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 289930235}
     m_Modifications:
+    - target: {fileID: 1876982762353758532, guid: b435633dfd79d4b108a0aef6af913a56, type: 3}
+      propertyPath: quadrantIndex
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3969721222719590802, guid: b435633dfd79d4b108a0aef6af913a56, type: 3}
       propertyPath: m_Name
       value: Quadrant3
@@ -639,6 +643,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 289930235}
     m_Modifications:
+    - target: {fileID: 1876982762353758532, guid: b435633dfd79d4b108a0aef6af913a56, type: 3}
+      propertyPath: quadrantIndex
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 3969721222719590802, guid: b435633dfd79d4b108a0aef6af913a56, type: 3}
       propertyPath: m_Name
       value: Quadrant4
@@ -741,6 +749,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 289930235}
     m_Modifications:
+    - target: {fileID: 1876982762353758532, guid: b435633dfd79d4b108a0aef6af913a56, type: 3}
+      propertyPath: quadrantIndex
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3969721222719590802, guid: b435633dfd79d4b108a0aef6af913a56, type: 3}
       propertyPath: m_Name
       value: Quadrant2
@@ -874,6 +886,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 289930235}
     m_Modifications:
+    - target: {fileID: 1876982762353758532, guid: b435633dfd79d4b108a0aef6af913a56, type: 3}
+      propertyPath: quadrantIndex
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3969721222719590802, guid: b435633dfd79d4b108a0aef6af913a56, type: 3}
       propertyPath: m_Name
       value: Quadrant1
