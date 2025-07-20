@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class PatternGenerator
 {
@@ -15,17 +16,18 @@ public class PatternGenerator
     public IList<GameEvent> GenerateNext()
     {
         IList<GameEvent> pattern = new List<GameEvent>();
-        Random random = new();
+        System.Random random = new();
 
         for (int i = 0; i < CurrLength; i++)
         {
             pattern.Add(new GameEvent(
                 (Colors)random.Next(0, Enum.GetValues(typeof(Colors)).Length),
-                random.Next(0, numCells)
+                random.Next(1, numCells + 1)
             ));
         }
 
         CurrLength++;
+        Debug.Log($"Generated pattern of length {CurrLength - 1}: {string.Join(", ", pattern)}");
         return pattern;
     }
 }

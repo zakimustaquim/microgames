@@ -7,7 +7,7 @@ public class QuadrantScript : MonoBehaviour
     public Color currColor;
 
     public int quadrantIndex;
-    public QuadrantStatus status = QuadrantStatus.AnimationNotStarted;
+    public GameManager.GameUnit currGameUnit;
     private float timer = 0.0f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -19,8 +19,13 @@ public class QuadrantScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (currGameUnit == null)
+        {
+            return; // If no current game unit, do nothing
+        }
+
         // If animating, update the opacity over time - fade in and then out over 1 second
-        if (status == QuadrantStatus.CurrentlyAnimating)
+        if (currGameUnit.status == QuadrantStatus.CurrentlyAnimating)
         {
             timer += Time.deltaTime; // Increment timer by the time since last frame
             if (timer < 0.5f) // Fade in for the first half second
@@ -33,8 +38,9 @@ public class QuadrantScript : MonoBehaviour
             }
             else if (timer >= 1.0f) // If the animation is complete
             {
-                status = QuadrantStatus.InProgress; // Stop animating
-                SetOpacity(1f); // Ensure opacity is set to 1 at the end
+                Debug.Log("Animation complete for quadrant " + quadrantIndex);
+                currGameUnit.status = QuadrantStatus.InProgress; // Stop animating
+                SetOpacity(0f); // Ensure opacity is set to 0 at the end
             }
         }
     }
@@ -51,14 +57,15 @@ public class QuadrantScript : MonoBehaviour
         gameObject.GetComponent<Image>().color = color; // Set the color
     }
 
-    public void Animate(Color color)
+    public void Animate(GameManager.GameUnit gameUnit)
     {
-        color.a = 0f;
+        currGameUnit = gameUnit; // Set the current game unit
+        Debug.Log("Beginning animation for quadrant " + quadrantIndex);
         // Update the current color
-        SetColor(color);
+        SetColor(currGameUnit.gameEvent.GetUnityColor()); 
 
         SetOpacity(0f); // Reset opacity to 0
         timer = 0.0f; // Reset timer
-        status = QuadrantStatus.CurrentlyAnimating;
+        currGameUnit.status = QuadrantStatus.CurrentlyAnimating;
     }
 }

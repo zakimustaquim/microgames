@@ -13,18 +13,18 @@ public class GameEvent
 
     public Color GetUnityColor()
     {
-        switch (color)
+        return color switch
         {
-            case Colors.RED:
-                return Color.red;
-            case Colors.GREEN:
-                return Color.green;
-            case Colors.BLUE:
-                return Color.blue;
-            case Colors.YELLOW:
-                return Color.yellow;
-            default:
-                return Color.white; // Default color if none match
-        }
+            Colors.RED => Color.red,
+            Colors.GREEN => Color.green,
+            Colors.BLUE => Color.blue,
+            Colors.YELLOW => Color.yellow,
+            _ => Color.white,// Default color if none match
+        };
+    }
+
+    public override string ToString()
+    {
+        return $"GameEvent(Color: {color}, Quadrant: {quadrant})";
     }
 }

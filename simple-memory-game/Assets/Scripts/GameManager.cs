@@ -16,18 +16,20 @@ public class GameManager : MonoBehaviour
     {
         gameUnits = new List<IList<GameUnit>>();
         patternGenerator = new PatternGenerator(4);
+        finder = new QuadrantFinder();
         Restart();
     }
 
     void Update()
     {
+        Debug.Log("State: " + gameUnits.Last().Select(u => u.ToString()).Aggregate((a, b) => a + ", " + b));
         text.text = $"{patternGenerator.CurrLength} | {gameUnits.Count}";
 
         // Handle game logic
         var state = GetState();
         switch (state)
         {
-            case GameState.Animating:
+            case GameState.WaitingForNextAnimation:
                 // Handle animating state
                 foreach (var unit in gameUnits.Last())
                 {
@@ -39,8 +41,8 @@ public class GameManager : MonoBehaviour
 
                         if (quadrant != null)
                         {
-                            quadrant.GetComponent<QuadrantScript>().Animate(unit.gameEvent.GetUnityColor());
-                            unit.status = QuadrantStatus.CurrentlyAnimating;
+                            quadrant.GetComponent<QuadrantScript>().Animate(unit);
+                            break;
                         }
                     }
                 }
@@ -68,7 +70,7 @@ public class GameManager : MonoBehaviour
         gameUnits.Add(nextPattern);
     }
 
-    private class GameUnit
+    public class GameUnit
     {
         public GameEvent gameEvent;
         public QuadrantStatus status;
@@ -78,10 +80,16 @@ public class GameManager : MonoBehaviour
             this.gameEvent = gameEvent;
             this.status = status;
         }
+
+        public override string ToString()
+        {
+            return gameEvent.ToString() + $" | Status: {status}";
+        }
     }
 
     private enum GameState
     {
+        WaitingForNextAnimation,
         Animating,
         WaitingForInput,
         AllDone,
@@ -89,13 +97,19 @@ public class GameManager : MonoBehaviour
 
     private GameState GetState()
     {
-        if (gameUnits.Any(unit => unit.Any(u => u.status == QuadrantStatus.AnimationNotStarted)))
+        if (gameUnits.Last().Any(u => u.status == QuadrantStatus.CurrentlyAnimating))
         {
             Debug.Log("Current State: Animating");
             return GameState.Animating;
         }
 
-        if (gameUnits.All(unit => unit.All(u => u.status == QuadrantStatus.Completed)))
+        if (gameUnits.Last().Any(u => u.status == QuadrantStatus.AnimationNotStarted))
+        {
+            Debug.Log("Current State: WaitingForNextAnimation");
+            return GameState.WaitingForNextAnimation;
+        }
+
+        if (gameUnits.Last().All(u => u.status == QuadrantStatus.Completed))
         {
             Debug.Log("Current State: AllDone");
             return GameState.AllDone;
