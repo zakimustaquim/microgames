@@ -7,7 +7,7 @@ public class PatternGenerator
     public int CurrLength { get; private set; }
     private readonly int numCells;
 
-    public PatternGenerator(int numCells)
+    public PatternGenerator(int numCells=4)
     {
         CurrLength = 2;
         this.numCells = numCells;

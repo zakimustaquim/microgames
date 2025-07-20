@@ -11,11 +11,13 @@ public class GameManager : MonoBehaviour
     private PatternGenerator patternGenerator;
     public Text text;
     public QuadrantFinder finder;
+    public static GameManager Instance { get; private set; }
 
     void Start()
     {
+        Instance = this;
         gameUnits = new List<IList<GameUnit>>();
-        patternGenerator = new PatternGenerator(4);
+        patternGenerator = new PatternGenerator();
         finder = new QuadrantFinder();
         Restart();
     }
@@ -52,17 +54,24 @@ public class GameManager : MonoBehaviour
                 // Handle all done state
                 GenerateNextPattern();
                 break;
+
+            case GameState.WaitingForInput:
+                finder.ResetQuadrants(true); // Allow input on quadrants
+                break;
         }
     }
 
     void Restart()
     {
+        finder.ResetQuadrants(false);
         gameUnits = new List<IList<GameUnit>>();
+        patternGenerator = new PatternGenerator();
         GenerateNextPattern();
     }
 
     private void GenerateNextPattern()
     {
+        finder.ResetQuadrants(false); // Reset quadrants to not accept input
         IList<GameUnit> nextPattern = patternGenerator.GenerateNext()
             .Select(gameEvent => new GameUnit(gameEvent, QuadrantStatus.AnimationNotStarted))
             .ToList();
@@ -117,5 +126,21 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("Current State: WaitingForInput");
         return GameState.WaitingForInput;
+    }
+
+    public void HandleNextInput(int quadrant, Colors color)
+    {
+        var currentUnit = gameUnits.Last().FirstOrDefault(u => u.status == QuadrantStatus.InProgress);
+        if (currentUnit.gameEvent.quadrant == quadrant && currentUnit.gameEvent.color == color)
+        {
+            Debug.Log($"Correct input for quadrant {quadrant} with color {color}");
+            currentUnit.status = QuadrantStatus.Completed; // Mark as completed
+        }
+        else
+        {
+            Debug.Log($"Incorrect input for quadrant {quadrant} with color {color}");
+            // Handle incorrect input (e.g., reset game, show error, etc.)
+            Restart();
+        }
     }
 }

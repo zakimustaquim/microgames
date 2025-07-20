@@ -9,6 +9,7 @@ public class QuadrantScript : MonoBehaviour
     public int quadrantIndex;
     public GameManager.GameUnit currGameUnit;
     private float timer = 0.0f;
+    public bool canAcceptInput = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -19,6 +20,31 @@ public class QuadrantScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (canAcceptInput)
+        {
+            SetColor(Color.white); // Reset color to white when accepting input
+
+            // handle input of number 1-4 if mouse is over this quadrant
+            if (RectTransformUtility.RectangleContainsScreenPoint(GetComponent<RectTransform>(), Input.mousePosition))
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    GameManager.Instance.HandleNextInput(quadrantIndex, (Colors)0);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    GameManager.Instance.HandleNextInput(quadrantIndex, (Colors)1);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha3))
+                {
+                    GameManager.Instance.HandleNextInput(quadrantIndex, (Colors)2);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha4))
+                {
+                    GameManager.Instance.HandleNextInput(quadrantIndex, (Colors)3);
+                }
+            }
+        }
         if (currGameUnit == null)
         {
             return; // If no current game unit, do nothing
@@ -52,7 +78,7 @@ public class QuadrantScript : MonoBehaviour
         SetColor(color); // Apply the color with the new opacity
     }
 
-    void SetColor(Color color)
+    public void SetColor(Color color)
     {
         gameObject.GetComponent<Image>().color = color; // Set the color
     }
@@ -62,7 +88,7 @@ public class QuadrantScript : MonoBehaviour
         currGameUnit = gameUnit; // Set the current game unit
         Debug.Log("Beginning animation for quadrant " + quadrantIndex);
         // Update the current color
-        SetColor(currGameUnit.gameEvent.GetUnityColor()); 
+        SetColor(currGameUnit.gameEvent.GetUnityColor());
 
         SetOpacity(0f); // Reset opacity to 0
         timer = 0.0f; // Reset timer

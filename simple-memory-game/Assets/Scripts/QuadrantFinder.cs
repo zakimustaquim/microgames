@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class QuadrantFinder
 {
@@ -22,5 +23,19 @@ public class QuadrantFinder
         quadrants = quadrants.OrderBy(q => q.GetComponent<QuadrantScript>().quadrantIndex).ToList();
 
         return quadrants;
+    }
+
+    public void ResetQuadrants(bool newVal)
+    {
+        var quadrants = FindQuadrants();
+        foreach (var quadrant in quadrants)
+        {
+            if (newVal == false)
+            {
+                quadrant.GetComponent<QuadrantScript>().SetColor(Color.clear);
+            }
+            
+            quadrant.GetComponent<QuadrantScript>().canAcceptInput = newVal;
+        }
     }
 }
