@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 public class PatternGenerator
 {
-    private int currLength;
+    public int CurrLength { get; private set; }
     private readonly int numCells;
 
     public PatternGenerator(int numCells)
     {
-        currLength = 3;
+        CurrLength = 2;
         this.numCells = numCells;
     }
 
@@ -17,7 +17,7 @@ public class PatternGenerator
         IList<GameEvent> pattern = new List<GameEvent>();
         Random random = new();
 
-        for (int i = 0; i < currLength; i++)
+        for (int i = 0; i < CurrLength; i++)
         {
             pattern.Add(new GameEvent(
                 (Colors)random.Next(0, Enum.GetValues(typeof(Colors)).Length),
@@ -25,7 +25,7 @@ public class PatternGenerator
             ));
         }
 
-        currLength++;
+        CurrLength++;
         return pattern;
     }
 }

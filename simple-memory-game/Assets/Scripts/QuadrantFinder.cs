@@ -19,7 +19,7 @@ public class QuadrantFinder
         }
 
         // sort by quadrant index
-        quadrants = new List<GameObject>(quadrants.OrderBy(q => q.GetComponent<QuadrantScript>().quadrantIndex));
+        quadrants = quadrants.OrderBy(q => q.GetComponent<QuadrantScript>().quadrantIndex).ToList();
 
         return quadrants;
     }
