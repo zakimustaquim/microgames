@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         Debug.Log("State: " + gameUnits.Last().Select(u => u.ToString()).Aggregate((a, b) => a + ", " + b));
-        text.text = $"{patternGenerator.CurrLength} | {gameUnits.Count}";
+        text.text = $"Round {gameUnits.Count} | Current Length: {patternGenerator.CurrLength}";
 
         // Handle game logic
         var state = GetState();
