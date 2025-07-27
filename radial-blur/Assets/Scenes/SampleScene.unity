@@ -334,6 +334,7 @@ GameObject:
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
   - component: {fileID: 519420033}
+  - component: {fileID: 519420034}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -472,6 +473,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   player: {fileID: 144993324}
+--- !u!114 &519420034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a9d82a0436da422bb6c87e7f28e871e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RadialBlurController
+  radialBlurMaterial: {fileID: 2100000, guid: 4f915f02238914275a92e319f6a916d6, type: 2}
+  player: {fileID: 144993324}
+  playerCamera: {fileID: 0}
+  maxBlurStrength: 1
+  blurRadius: 0.8
+  triggerDistance: 5
+  maxDistance: 20
+  followPlayer: 1
+  centerX: 0.5
+  centerY: 0.5
+  debugMode: 1
+  debugBlurStrength: 0.5
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
