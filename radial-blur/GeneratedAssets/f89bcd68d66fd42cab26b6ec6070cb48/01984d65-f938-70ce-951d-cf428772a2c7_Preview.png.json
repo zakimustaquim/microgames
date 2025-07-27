@@ -1,0 +1,11 @@
+{
+    "asset": "f89bcd68d66fd42cab26b6ec6070cb48",
+    "fileName": "01984d65-f938-70ce-951d-cf428772a2c7_Preview.png",
+    "prompt": "black and white pixel art stone tile old tower dirty avant garde",
+    "negativePrompt": "",
+    "model": "575ecf67-4425-4939-97b9-5e138b8ee234",
+    "modelName": "Unity Texture2D",
+    "customSeed": 906672467,
+    "w3CTraceId": "48fead8c9ae1a7f9aa5ab4594f4bd8bb",
+    "refinementMode": "Generation"
+}
