@@ -1,9 +1,6 @@
 /// <summary>
 /// An implementation of the core logging methods using
 /// a [TaggedLogger] for non-MonoBehaviour based classes.
-/// 
-/// Implementing classes must instantiate the [TaggedLogger]
-/// object before using any of the methods.
 /// </summary>
 public class Logging
 {

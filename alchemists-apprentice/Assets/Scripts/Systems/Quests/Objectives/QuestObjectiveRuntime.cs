@@ -1,3 +1,7 @@
+/// <summary>
+/// Runtime representation of a [QuestObjective]. Contains
+/// the data for the Objective as well as the current state.
+/// </summary>
 public abstract class QuestObjectiveRuntime : Logging
 {
     public QuestObjective objectiveData;
