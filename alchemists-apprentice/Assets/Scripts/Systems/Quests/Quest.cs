@@ -13,4 +13,11 @@ public class Quest : LoggingScriptableObject
 
     public QuestObjective[] objectives;
     public QuestReward[] rewards;
+
+    public Questline questline;
+
+    public override string ToString()
+    {
+        return $"[Quest: questName={questName}, description={description}, objectives={objectives.Length}, rewards={rewards.Length}, questline={questline}]";
+    }
 }
