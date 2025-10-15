@@ -21,4 +21,9 @@ public class EntityStats : LoggingScriptableObject
     public int defense;
     public int speed;
     public int luck;
+
+    public override string ToString()
+    {
+        return $"[EntityStats: maxHealth={maxHealth}, maxMana={maxMana}, strength={strength}, defense={defense}, speed={speed}, luck={luck}]";
+    }
 }
