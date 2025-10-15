@@ -5,7 +5,7 @@ public class TaggedLogger
 {
     private readonly string scriptTag;
     private readonly Object context;
-    public const int DefaultLogLevel = 3;
+    public const int DefaultLogLevel = 2;
 
     public TaggedLogger(string tag, Object context = null)
     {

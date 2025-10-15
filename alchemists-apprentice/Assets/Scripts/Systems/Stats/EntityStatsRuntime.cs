@@ -31,14 +31,14 @@ public class EntityStatsRuntime : Logging
         currHealth -= finalDamage;
         currHealth = Mathf.Max(currHealth, 0);
 
-        log($"Took ${damage} damage. New health is ${currHealth}");
+        log($"Took ${damage} damage. New health is ${currHealth}", 3);
     }
 
     public void Heal(int healAmount)
     {
         currHealth = Mathf.Min(currHealth + healAmount, baseStats.maxHealth);
 
-        log($"Healed ${healAmount} health. New health is ${currHealth}");
+        log($"Healed ${healAmount} health. New health is ${currHealth}", 3);
     }
 
     public void IncrementStat(EntityStats.EntityStatType type, int amount)
