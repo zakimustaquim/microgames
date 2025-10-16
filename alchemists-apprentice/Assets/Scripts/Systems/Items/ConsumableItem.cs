@@ -8,9 +8,11 @@ public class ConsumableItem : Item
 
     public void OnConsume(GameObject consumer)
     {
+        log("Consuming item: " + itemName);
         foreach (var effect in effects)
         {
             effect.Apply(consumer);
         }
+        log("Finished consuming item: " + itemName);
     }
 }

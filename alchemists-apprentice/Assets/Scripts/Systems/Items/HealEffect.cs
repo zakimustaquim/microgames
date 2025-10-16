@@ -7,6 +7,8 @@ public class HealEffect : ItemEffect
 
     public override void Apply(GameObject target)
     {
+        log("Applying HealEffect to " + target.name);
+
         // Implement healing logic here
         if (target.TryGetComponent<Player>(out var player))
         {

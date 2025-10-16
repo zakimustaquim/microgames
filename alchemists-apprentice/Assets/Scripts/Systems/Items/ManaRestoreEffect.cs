@@ -7,6 +7,8 @@ public class ManaRestoreEffect : ItemEffect
 
     public override void Apply(GameObject target)
     {
+        log("Applying ManaRestoreEffect to " + target.name);
+        
         // Implement mana restoration logic here
         if (target.TryGetComponent<Player>(out var player))
         {
