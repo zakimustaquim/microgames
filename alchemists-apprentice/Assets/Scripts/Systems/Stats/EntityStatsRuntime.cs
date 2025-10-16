@@ -41,6 +41,13 @@ public class EntityStatsRuntime : Logging
         log($"Healed ${healAmount} health. New health is ${currHealth}", 3);
     }
 
+    public void RestoreMana(int manaAmount)
+    {
+        currMana = Mathf.Min(currMana + manaAmount, baseStats.maxMana);
+
+        log($"Restored ${manaAmount} mana. New mana is ${currMana}", 3);
+    }
+
     public void IncrementStat(EntityStats.EntityStatType type, int amount)
     {
         switch (type)
