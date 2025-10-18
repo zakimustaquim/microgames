@@ -16,6 +16,15 @@ public class RegionPortal : LoggingMonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            log("Player collided with a GameObject with a RegionPortal.", 1);
+            
+            if (connection == null)
+            {
+                warn("No RegionConnection assigned to this RegionPortal. Cannot move to new region.");
+                return;
+            }
+
+            log("Sending RegionConnection to WorldManager to move to new region.", 1);
             WorldManager.Instance.MoveToRegion(connection);
         }
     }
