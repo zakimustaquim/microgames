@@ -10,5 +10,5 @@ public class DialogueCharacter : LoggingScriptableObject
 {
     public string characterName;
     public Sprite characterPortrait;
-    public List<AudioClip> voiceClips; // optional list of voice clips for the character - will be randomly selected when they speak if no specific clip provided
+    public List<Sound> voiceClips; // optional list of voice clips for the character - will be randomly selected when they speak if no specific clip provided
 }

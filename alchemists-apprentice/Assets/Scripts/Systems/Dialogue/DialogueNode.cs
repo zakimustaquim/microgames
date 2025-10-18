@@ -9,6 +9,6 @@ public class DialogueNode
 {
     public DialogueCharacter speaker;
     [TextArea] public string dialogueText;
-    public AudioClip audioClip; // optional audio clip for the dialogue
+    public Sound audioClip; // optional audio clip for the dialogue
     public List<DialogueOption> options;
 }
