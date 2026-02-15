@@ -182,7 +182,7 @@ public class MouseInputController : MonoBehaviour
         Deselect();
         selectedPiece = piece;
         validMoves.Clear();
-        validMoves.AddRange(piece.GetLegalMoves(gameManager.BoardState));
+        validMoves.AddRange(gameManager.GetLegalMovesForPiece(piece));
         DrawValidMoveHighlights();
 
         selectedRenderer = piece.GetComponentInChildren<Renderer>();

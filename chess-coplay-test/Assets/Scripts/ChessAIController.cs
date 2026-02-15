@@ -68,7 +68,15 @@ public class ChessAIController : MonoBehaviour
         List<SimulatedMove> moves = GetAllMovesForColor(aiColor);
         if (moves.Count == 0)
         {
-            gameManager.EndGame(aiColor == PieceColor.White ? PieceColor.Black : PieceColor.White);
+            if (gameManager.IsKingInCheck(aiColor))
+            {
+                gameManager.EndGame(aiColor == PieceColor.White ? PieceColor.Black : PieceColor.White);
+            }
+            else
+            {
+                gameManager.EndDraw();
+            }
+
             isThinking = false;
             yield break;
         }
@@ -201,7 +209,7 @@ public class ChessAIController : MonoBehaviour
                     continue;
                 }
 
-                List<Vector2Int> legal = piece.GetLegalMoves(board);
+                List<Vector2Int> legal = gameManager.GetLegalMovesForPiece(piece);
                 for (int i = 0; i < legal.Count; i++)
                 {
                     ChessPiece target = board[legal[i].x, legal[i].y];

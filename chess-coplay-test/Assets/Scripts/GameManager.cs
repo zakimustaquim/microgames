@@ -44,6 +44,92 @@ public class GameManager : MonoBehaviour
     public PieceColor CurrentTurn => currentTurn;
     public bool IsGameOver => gameOver;
 
+    public List<Vector2Int> GetLegalMovesForPiece(ChessPiece piece)
+    {
+        List<Vector2Int> legalMoves = new List<Vector2Int>();
+        if (piece == null || !ChessPieceIsAtExpectedCell(piece))
+        {
+            return legalMoves;
+        }
+
+        List<Vector2Int> pseudoLegal = piece.GetLegalMoves(board);
+        for (int i = 0; i < pseudoLegal.Count; i++)
+        {
+            Vector2Int target = pseudoLegal[i];
+            ChessPiece targetPiece = board[target.x, target.y];
+
+            if (targetPiece != null && targetPiece.PieceType == PieceType.King)
+            {
+                continue;
+            }
+
+            MoveSimulation simulation = ApplySimulationMove(piece, target.x, target.y);
+            bool ownKingInCheck = IsKingInCheck(piece.Color);
+            UndoSimulationMove(simulation);
+
+            if (!ownKingInCheck)
+            {
+                legalMoves.Add(target);
+            }
+        }
+
+        return legalMoves;
+    }
+
+    public bool HasAnyLegalMove(PieceColor color)
+    {
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                ChessPiece piece = board[x, y];
+                if (piece == null || piece.Color != color)
+                {
+                    continue;
+                }
+
+                if (GetLegalMovesForPiece(piece).Count > 0)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public bool IsKingInCheck(PieceColor kingColor)
+    {
+        if (!TryFindKing(kingColor, out Vector2Int kingPos))
+        {
+            return true;
+        }
+
+        PieceColor enemyColor = kingColor == PieceColor.White ? PieceColor.Black : PieceColor.White;
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                ChessPiece enemyPiece = board[x, y];
+                if (enemyPiece == null || enemyPiece.Color != enemyColor)
+                {
+                    continue;
+                }
+
+                List<Vector2Int> attacks = enemyPiece.GetLegalMoves(board);
+                for (int i = 0; i < attacks.Count; i++)
+                {
+                    if (attacks[i].x == kingPos.x && attacks[i].y == kingPos.y)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     private void Start()
     {
         if (!autoInitialize)
@@ -84,7 +170,7 @@ public class GameManager : MonoBehaviour
             return false;
         }
 
-        List<Vector2Int> legalMoves = piece.GetLegalMoves(board);
+        List<Vector2Int> legalMoves = GetLegalMovesForPiece(piece);
         Vector2Int target = new Vector2Int(toX, toY);
         if (!legalMoves.Contains(target))
         {
@@ -106,16 +192,28 @@ public class GameManager : MonoBehaviour
 
         if (captured != null)
         {
-            bool capturedKing = captured.PieceType == PieceType.King;
             Destroy(captured.gameObject);
-            if (capturedKing)
-            {
-                EndGame(piece.Color);
-                return true;
-            }
         }
 
-        currentTurn = currentTurn == PieceColor.White ? PieceColor.Black : PieceColor.White;
+        PieceColor opponent = piece.Color == PieceColor.White ? PieceColor.Black : PieceColor.White;
+        bool opponentHasMove = HasAnyLegalMove(opponent);
+        bool opponentInCheck = IsKingInCheck(opponent);
+
+        if (!opponentHasMove)
+        {
+            if (opponentInCheck)
+            {
+                EndGame(piece.Color);
+            }
+            else
+            {
+                EndDraw();
+            }
+
+            return true;
+        }
+
+        currentTurn = opponent;
         OnTurnChanged?.Invoke(currentTurn);
         return true;
     }
@@ -162,6 +260,17 @@ public class GameManager : MonoBehaviour
         OnGameOver?.Invoke(winner);
     }
 
+    public void EndDraw()
+    {
+        if (gameOver)
+        {
+            return;
+        }
+
+        gameOver = true;
+        Debug.Log("Game over. Draw by stalemate.");
+    }
+
     private static bool IsInsideBoard(int x, int y)
     {
         return x >= 0 && x < 8 && y >= 0 && y < 8;
@@ -175,6 +284,78 @@ public class GameManager : MonoBehaviour
         }
 
         return board[piece.BoardX, piece.BoardY] == piece;
+    }
+
+    private bool TryFindKing(PieceColor kingColor, out Vector2Int kingPos)
+    {
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                ChessPiece piece = board[x, y];
+                if (piece != null && piece.Color == kingColor && piece.PieceType == PieceType.King)
+                {
+                    kingPos = new Vector2Int(x, y);
+                    return true;
+                }
+            }
+        }
+
+        kingPos = default;
+        return false;
+    }
+
+    private struct MoveSimulation
+    {
+        public ChessPiece Piece;
+        public ChessPiece Captured;
+        public int FromX;
+        public int FromY;
+        public int ToX;
+        public int ToY;
+        public bool PreviousHasMoved;
+        public bool CapturedWasActive;
+    }
+
+    private MoveSimulation ApplySimulationMove(ChessPiece piece, int toX, int toY)
+    {
+        MoveSimulation simulation = new MoveSimulation
+        {
+            Piece = piece,
+            Captured = board[toX, toY],
+            FromX = piece.BoardX,
+            FromY = piece.BoardY,
+            ToX = toX,
+            ToY = toY,
+            PreviousHasMoved = piece.HasMoved,
+            CapturedWasActive = board[toX, toY] != null && board[toX, toY].gameObject.activeSelf
+        };
+
+        board[simulation.FromX, simulation.FromY] = null;
+        board[toX, toY] = piece;
+        piece.SetBoardPosition(toX, toY);
+        piece.HasMoved = true;
+
+        if (simulation.Captured != null)
+        {
+            simulation.Captured.gameObject.SetActive(false);
+        }
+
+        return simulation;
+    }
+
+    private void UndoSimulationMove(MoveSimulation simulation)
+    {
+        board[simulation.ToX, simulation.ToY] = simulation.Captured;
+        board[simulation.FromX, simulation.FromY] = simulation.Piece;
+
+        simulation.Piece.SetBoardPosition(simulation.FromX, simulation.FromY);
+        simulation.Piece.HasMoved = simulation.PreviousHasMoved;
+
+        if (simulation.Captured != null)
+        {
+            simulation.Captured.gameObject.SetActive(simulation.CapturedWasActive);
+        }
     }
 
     private void ClearExistingPieces()
